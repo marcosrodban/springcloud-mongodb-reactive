@@ -1,0 +1,38 @@
+#el puerto de arranque para el servidor tomcat se coje del servidor de configuracion
+server:
+  port: 8898
+spring:
+  web:
+    resources:
+      static-locations:
+        - "classpath:/static/*"
+  application:
+    name: mongodb-reactive
+  profiles:
+    active: dev
+  data:
+    mongodb:
+      contacto:
+        database: admin
+        uri: mongodb://root:pass@192.168.1.127:27017       
+  autoconfigure:
+  #ojo esta parte es superimportante si no excluimos esta auto-configuracion no nos carga la nuestra y siempre trata de conectar a localhost:27017
+    exclude: org.springframework.boot.autoconfigure.mongo.MongoReactiveAutoConfiguration,org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration
+  main:
+    web-application-type: "REACTIVE"
+  webflux:
+    static-path-pattern: "/**"
+  resources:
+    static-locations: "classpath:/static/"
+    
+    
+logging:
+  level:
+    org:
+      springframework:
+        data:
+          mongodb:
+            core:
+              MongoTemplate: DEBUG
+    
+    

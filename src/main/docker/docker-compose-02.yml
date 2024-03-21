@@ -1,0 +1,19 @@
+version: "3.9"
+services:
+ restfulapp02:
+  image: restfulapp:v1
+  container_name: restfulapp02
+  build: .
+  ports:
+   - "10002:8899"
+  #links:
+  # -
+  environment:
+   - EUREKA_SERVER_HOST=192.168.1.126
+   - EUREKA_SERVER_PORT=10002
+#creamos un volumen de tipo host
+  volumes:
+   - /home/neo/temp/docker/var/apps/restfulapp/conf:/conf
+
+
+ 
