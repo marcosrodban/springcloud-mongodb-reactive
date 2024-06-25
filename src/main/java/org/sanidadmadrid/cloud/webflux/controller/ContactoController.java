@@ -2,7 +2,7 @@ package org.sanidadmadrid.cloud.webflux.controller;
 
 
 
-import java.sql.Date;
+
 import java.time.Duration;
 import java.util.Random;
 import java.util.stream.Stream;
@@ -50,12 +50,26 @@ public class ContactoController {
 		return theReturn;
 	}
 	
-	@GetMapping("/usuarios")
-	public Flux<Usuario> listaUsuarios() {
-		Flux<Usuario> theReturn = contactoService.listUsuarios();
-		theReturn.log("generating data....").doOnNext(data -> System.out.print(data));
-		return theReturn;
+	
+	@GetMapping("/parallelprocess")
+	public void paralellprocess() {
+		contactoService.comparableFuture();
 	}
+	
+	
+	@GetMapping(value="/usuariosstream", produces=MediaType.TEXT_EVENT_STREAM_VALUE)
+	public Flux<Usuario> listaUsuariosStream() {
+
+		return contactoService.listaUsuariosStream();
+	}
+	
+	@GetMapping(value="/usuariosstream2", produces=MediaType.TEXT_EVENT_STREAM_VALUE)
+	public Flux<Usuario> listaUsuariosStream2() {
+		 return Flux.interval(Duration.ofSeconds(5))
+				 .flatMap(s -> contactoService.listUsuarios())
+			      .log("Generado nuevo valor");
+	}
+	
 
 	@GetMapping(value="/contactoses", produces=MediaType.TEXT_EVENT_STREAM_VALUE)
 	public Flux<String> listContactosev(){
@@ -63,7 +77,9 @@ public class ContactoController {
 		int low = 0;
 		int high = 50;
 		return Flux.fromStream(
-				Stream.generate(() -> r.nextInt(high - low) + low).map(s -> String.valueOf(s)).peek((msg) -> {
+				Stream.generate(() -> r.nextInt(high - low) + low)
+				.map(s -> String.valueOf(s))
+				.peek((msg) -> {
 					LOGGER.info(msg);
 				}))
 				.map(s -> s)
@@ -93,12 +109,6 @@ public class ContactoController {
 		c.setMyemail(email);
 		c.setNombre(nombre);
 		return contactoService.contactoNombreEmail(c);
-
-	}
-	
-	@PostMapping("/usuario")
-	public Mono<ResponseEntity<Usuario>> usuario(@RequestBody Usuario usuario) {
-		return contactoService.usuario(usuario);
 
 	}
 

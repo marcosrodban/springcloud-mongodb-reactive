@@ -19,7 +19,7 @@ function setConnected(connected) {
 }
 
 function connect() {
-   eventSource = new EventSource('http://localhost:8898/mongodb/contactoses');
+   eventSource = new EventSource('http://localhost:8898/mongodb/usuariosstream2');
 
 eventSource.onopen = function () {
      setConnected(true);

@@ -1,23 +1,22 @@
 package org.sanidadmadrid.cloud.webflux.repository;
 
-import org.sanidadmadrid.cloud.webflux.documents.Contacto;
+
 import org.sanidadmadrid.cloud.webflux.documents.Usuario;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
-
+import org.springframework.data.mongodb.repository.Tailable;
 import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
+
 
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 @Repository
-public interface ContactoRepository extends ReactiveMongoRepository<Contacto,String> {
+public interface UsuarioRepository extends ReactiveMongoRepository<Usuario,String> {
 
 
 
-    Mono<Contacto> findAllByTelefonoOrNombre(String telefonoOrNombre);
-    
 
+	@Tailable
+    Flux<Usuario> findWithTailableCursorBy();
 
 //	public Flux<Contacto> findAll() {
 //		// TODO Auto-generated method stub

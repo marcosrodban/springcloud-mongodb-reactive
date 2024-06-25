@@ -1,0 +1,5 @@
+ojo el contenido estatico cuando se usa @EnableWebFlux hay que activarlo
+con una routerfunction (ver WebfluxConfiguration).
+
+Si no se activa esta anotación se puede poner dentro de resources/static y el 
+servidor netty lo expone automaticamente.

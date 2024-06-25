@@ -10,6 +10,7 @@ import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
+import org.springframework.data.mongodb.repository.Tailable;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
@@ -71,6 +72,11 @@ public class ContactoTemplateRepository  {
         return template.remove(query, Contacto.class)
         		.map(com.mongodb.client.result.DeleteResult::getDeletedCount);
     }
+
+    @Tailable
+	public Flux<Usuario> findWithTailableCursorBy() {
+		return template.findAll(Usuario.class);
+	}
 
 
 
