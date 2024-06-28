@@ -24,8 +24,21 @@ spring:
       #static-path-pattern: "/**"
   #resources:
   #    static-locations: "classpath:/static/"
-    
-    
+  
+  
+  kafka:
+    consumer:
+      bootstrap-servers: 192.168.1.127:9092,192.168.1.127:9093,192.168.1.127:9094
+
+#configuracion de datos del aplicativo    
+aplicacion:
+  #parametrizacion para kafka
+  kafka:
+    topic-genericevents-name: GENERICTOPIC    
+    topic-sms-name: SMSTOPIC    
+    topic-mail-name: MAILTOPIC    
+
+   
 logging:
   level:
     org:

@@ -18,6 +18,8 @@ import org.sanidadmadrid.cloud.webflux.documents.Usuario;
 import org.sanidadmadrid.cloud.webflux.repository.ContactoRepository;
 import org.sanidadmadrid.cloud.webflux.repository.ContactoTemplateRepository;
 import org.sanidadmadrid.cloud.webflux.repository.UsuarioRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
@@ -39,6 +41,8 @@ import reactor.core.publisher.Mono;
 
 @Service
 public class ContactoService {
+	
+	private static Logger LOGGER = LoggerFactory.getLogger(ContactoService.class);
 
 	@Autowired
 	private ContactoTemplateRepository contactoTemplateRepository;
@@ -144,7 +148,7 @@ public class ContactoService {
 	public void comparableFuture() {
 		
 
-
+		LOGGER.info(String.format("comenzamos el proceso"));
 		
 		CompletableFuture<List<Contacto>> future1  
 		  = CompletableFuture.supplyAsync( ()-> consultarContactos("marcos"));
@@ -154,7 +158,9 @@ public class ContactoService {
 		
 
 		
-		System.out.println("combinamos: " );
+		
+		LOGGER.info(String.format("creamos un cominedFuture"));
+		//en este punto es donde se ejecutan las tareas en paralelo
 		CompletableFuture<Void> combinedFuture 
 		  = CompletableFuture.allOf(future1, future2);
 
@@ -175,32 +181,37 @@ public class ContactoService {
 		
 */
 		
-		 System.out.println("hacemos un get: ");
-		try {
-			combinedFuture.get();
+		 
+		 LOGGER.info(String.format("Realizamos un combinedFuture.get()"));
+		/*try {
+			//en este punto se recoge el resultado y se espera si es necesario 
+			//hasta que terminen ambas tareas
+			
+			//combinedFuture.get();
 		} catch (InterruptedException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		} catch (ExecutionException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
-		}
-		 System.out.println("fin del la combinación: ");
-		combinedFuture.join();
-		System.out.println("hacemos join: ");
-		
-		try {
-			System.out.println("contactos1: " + future1.get());
-			System.out.println("contactos2: " + future2.get());
+		}*/
+		 LOGGER.info(String.format("fin de combinedFuture.get()"));
+		 LOGGER.info(String.format("vamoa a realizar un combinedFuture.join()"));
+		 //con el join espera a que acaben las tareas para unirlas
+		//combinedFuture.join();
+		LOGGER.info(String.format("fin decombinedFuture.join()"));
+		/*try {
+			LOGGER.info(String.format("vamoa a realizar un future1.get():[%s]",future1.get()));
+			LOGGER.info(String.format("vamoa a realizar un future2.get():[%s]",future2.get()));
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (ExecutionException e) {
 			e.printStackTrace();
-		}
+		}*/
 
 		
-
+/*
 		
 		List<Contacto> combined;
 		try {
@@ -216,7 +227,7 @@ public class ContactoService {
 			e.printStackTrace();
 		}
 
-		
+	*/	
 		
 		
 	}
@@ -224,12 +235,13 @@ public class ContactoService {
 	
 	private List<Contacto> consultarContactos(String nombre){
 		  try {
-			  System.out.println("buscamos contactos para : " + nombre);
+			  LOGGER.info(String.format("buscamos contactos para :[%s]",nombre));
 			Thread.sleep(5000);
 			Contacto c = new Contacto();
 			c.setNombre(nombre + Math.random());
 			Contacto c1 = new Contacto();
 			c1.setNombre(nombre + Math.random());
+			LOGGER.info(String.format("contactos encontrados c1 :[%s] , c2:[%s]",c,c1));
 			return Arrays.asList(c,c1);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block

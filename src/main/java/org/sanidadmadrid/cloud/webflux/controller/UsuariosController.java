@@ -1,11 +1,9 @@
 package org.sanidadmadrid.cloud.webflux.controller;
 
-import org.sanidadmadrid.cloud.taskevents.events.TaskEvent;
 import org.sanidadmadrid.cloud.webflux.documents.Usuario;
 import org.sanidadmadrid.cloud.webflux.services.impl.TaskEventsHandler;
 import org.sanidadmadrid.cloud.webflux.services.impl.UsuariosService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,9 +38,6 @@ public class UsuariosController {
 	}
 	
 	
-	@PostMapping("/handletaskevent")
-	public ResponseEntity<TaskEvent> handleTaskEvent(@RequestBody TaskEvent taskEvent) {
-		return new ResponseEntity<TaskEvent>(taskEventsHandler.handleEvent(taskEvent), HttpStatus.OK);
-	}
+
 	
 }
