@@ -1,0 +1,7 @@
+#configuracion de datos del aplicativo    
+aplicacion:
+  #parametrizacion para kafka
+  kafka:
+    topic-genericevents-name: GENERICTOPIC    
+    topic-sms-name: SMSTOPIC    
+    topic-mail-name: MAILTOPIC    

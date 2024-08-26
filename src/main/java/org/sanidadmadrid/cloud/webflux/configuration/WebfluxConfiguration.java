@@ -16,12 +16,7 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 @Configuration
 public class WebfluxConfiguration  implements WebFluxConfigurer {
 	
-	
-	
-	/*
-	 * 
-	 * 
-	 * */
+
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		registry.addResourceHandler("/resources/**")

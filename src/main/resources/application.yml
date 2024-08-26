@@ -1,6 +1,8 @@
 #el puerto de arranque para el servidor tomcat se coje del servidor de configuracion
 server:
   port: 8899
+  http2:
+    enabled: true
 spring:
   #web:
    #resources:
@@ -10,6 +12,21 @@ spring:
     name: mongodb-reactive
   profiles:
     active: dev
+  cloud:
+       #para desactivar la carga desde el servidor de configuracion es poner a false una de las dos siguientes propiedades
+    config:
+      enabled: false
+  config:
+     import:
+      #- optional:configserver:http://192.168.1.127:9001   
+      #- optional:configserver:http://192.168.1.127:9001/mongodb-reactive-custom-{profile}
+      - "classpath:mongodb-reactive-custom.yml"
+    #configuracion antigua
+  #cloud:
+    #config:
+     # uri: http://localhost:9091 
+      #uri: http://192.168.1.127:9001       
+      #failFast: true    
   data:
     mongodb:
       contacto:
@@ -29,17 +46,16 @@ spring:
   kafka:
     consumer:
       bootstrap-servers: 192.168.1.127:9092,192.168.1.127:9093,192.168.1.127:9094
+  observability:
+    trace-id-response-header-name: X-TraceId
 
-#configuracion de datos del aplicativo    
-aplicacion:
-  #parametrizacion para kafka
-  kafka:
-    topic-genericevents-name: GENERICTOPIC    
-    topic-sms-name: SMSTOPIC    
-    topic-mail-name: MAILTOPIC    
-
-   
+  
+  
+ #configuracion del log
 logging:
+  #config: "classpath:log4j2-spring.xml"
+  pattern:
+    level: '%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]'  
   level:
     org:
       springframework:
@@ -47,5 +63,56 @@ logging:
           mongodb:
             core:
               MongoTemplate: DEBUG
+
+              
+#configuracion para el actuator de spring boot, para que muestre todos los filtros web
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+        #include: prometheus
+  tracing:
+    enabled: true
+    sampling:
+      probability: 1.0        
+  metrics:
+    distribution:
+      percentiles-histogram:
+        http:
+          server:
+            requests: true
+  zipkin:
+    tracing:
+      endpoint: http://localhost:9410/api/v2/spans
     
     
+    
+    
+#configuracion de eureka
+eureka:
+  client:
+    #telling the server to register himself in the service registry of the other servers
+    instance-info-replication-interval-seconds: 10
+    registry-fetch-interval-seconds: 10
+    registerWithEureka: false
+    fetchRegistry: false
+    serviceUrl:
+    #cuando llegue el momento esto hay que cambiarlo por la url del balanceador zuul
+      defaultZone: http://192.168.1.127:9002/eureka/,http://192.168.1.127:9003/eureka/
+    healthcheck:
+      enabled: true
+  instance:
+    #colocamos el valor preferIpAddres a false para poder poner nosotros el hostname que se va a registrar
+    preferIpAddress: false
+    #hostname: ${EUREKA_SERVER_HOST}.
+    hostname: 192.168.1.107
+    initialStatus: UP
+    lease-renewal-interval-in-seconds: 10
+    lease-expiration-duration-in-seconds: 30
+    leaseExpirationDurationInSeconds: 5
+    #healthCheckUrlPath: /actuator/health
+    #statusPageUrlPath: /actuator/info
+
+  #wait time for subsequent sync
+    #waitTimeInMsWhenSyncEmpty: 5000

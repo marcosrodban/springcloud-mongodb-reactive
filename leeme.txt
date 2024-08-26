@@ -1,3 +1,34 @@
+En este proyecto está montado
+-----------------------------
+
+- Conexión con base de datos mongodb. Mediante templates de tipo reactive.
+
+- Ejemplos de la clase CompletableFuture para el procesado en paralelo de datos (ParallelController). (mongodb/parallelprocess)
+
+
+- Integración de eventos con kafka
+
+- Ejemplos de WebFlux de Eventos de stream (MediaType.TEXT_EVENT_STREAM_VALUE)(StreamController)
+
+
+
+--------------------------------------------------
+- Ejemplo completo de arquitectura de eventos    -
+--------------------------------------------------
+
+- Otra de las partes de esta arquitectura montada es microservice-001
+
+- Se reciben altas de usuario (http://localhost:8899/mongodb/usuarios) y se generan eventos (MailEvent y SMSEvent) para encolar en kafka
+Una vez tratados estos eventos, por el servicio correspondiente (microservice-001) sen notificará 
+el tratamiento correcto o incorrecto del evento en la url http://localhost:8899/mongodb/handletaskevent
+
+
+
+
+
+
+NOTAS:
+
 ojo el contenido estatico cuando se usa @EnableWebFlux hay que activarlo
 con una routerfunction (ver WebfluxConfiguration).
 

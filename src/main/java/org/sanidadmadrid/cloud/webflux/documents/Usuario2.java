@@ -11,38 +11,47 @@ import org.springframework.data.mongodb.core.mapping.Field;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
-
 
 @Getter
 @Setter
-@ToString
 @Document(collection="usuarios")
-public class Usuario {
+public class Usuario2 {
 	
 
 	@Id
 	private String id;
 	
-	
-	
 	//private List<Contacto> contacto;
 	
-//	
-//	@Field("idcontacto")
-//	@DocumentReference(lookup="{'_id': ?#{#target}}")
-//	private Contacto contacto;
 	
-	//con esta anotación te crea sólo el objectId si no se pone te crea todo un objeto contacto
-	@DocumentReference
+	@Field("idcontacto")
+	@DocumentReference(lookup="{'_id': ?#{#target}}")
 	private Contacto contacto;
+	
 	
 	private String nombre, apellido1;
 
 
+	@Override
+	public String toString() {
+		return "Usuario [id=" + id + ", contacto=" + contacto + ", nombre=" + nombre + ", apellido1=" + apellido1 + "]";
+	}
 
 
 
+
+	public Contacto getContacto() {
+		return contacto;
+	}
+
+
+	public void setContacto(Contacto contacto) {
+		this.contacto = contacto;
+	}
+
+
+	
+	
 	
 
 }

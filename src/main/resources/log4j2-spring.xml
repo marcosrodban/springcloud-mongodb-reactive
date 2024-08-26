@@ -6,8 +6,8 @@
         </Console>
 
         <RollingFile name="RollingFile"
-            fileName="/logs/restfulapp.log"
-            filePattern="/logs/restfulapp-%d{-dd-MMMM-yyyy}-%i.log.gz">
+            fileName="/logs/mongodb-reactive.log"
+            filePattern="/logs/mongodb-reactive-%d{-dd-MMMM-yyyy}-%i.log.gz">
             <PatternLayout>
                 <pattern>%d %p %C{1.} [%t] %m%n</pattern>
             </PatternLayout>
@@ -28,7 +28,7 @@
         </Root>
 
         <!-- LOG "com.baeldung*" at TRACE level -->
-        <Logger name="org.sanidadmadrid.cloud.restful" level="trace"></Logger>
+        <Logger name="org.sanidadmadrid.cloud.webflux" level="trace"></Logger>
     </Loggers>
 
 </Configuration>

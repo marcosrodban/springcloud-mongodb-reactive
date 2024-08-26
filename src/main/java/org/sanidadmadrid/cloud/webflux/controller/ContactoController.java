@@ -1,21 +1,12 @@
 package org.sanidadmadrid.cloud.webflux.controller;
 
 
-
-
-import java.time.Duration;
-import java.util.Random;
-import java.util.stream.Stream;
-
 import org.sanidadmadrid.cloud.webflux.documents.Contacto;
-import org.sanidadmadrid.cloud.webflux.documents.Usuario;
 import org.sanidadmadrid.cloud.webflux.services.impl.ContactoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.codec.ServerSentEvent;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,7 +27,7 @@ import reactor.core.publisher.Mono;
 public class ContactoController {
 	
 	private static Logger LOGGER = LoggerFactory.getLogger(ContactoController.class);
-
+	
 	@Autowired
 	private ContactoService contactoService;
 
@@ -49,59 +40,13 @@ public class ContactoController {
 		theReturn.log("generating data....").doOnNext(data -> System.out.print(data));
 		return theReturn;
 	}
-	
-	
-	@GetMapping("/parallelprocess")
-	public void paralellprocess() {
-		contactoService.comparableFuture();
-	}
-	
-	
-	@GetMapping(value="/usuariosstream", produces=MediaType.TEXT_EVENT_STREAM_VALUE)
-	public Flux<Usuario> listaUsuariosStream() {
-
-		return contactoService.listaUsuariosStream();
-	}
-	
-	@GetMapping(value="/usuariosstream2", produces=MediaType.TEXT_EVENT_STREAM_VALUE)
-	public Flux<Usuario> listaUsuariosStream2() {
-		 return Flux.interval(Duration.ofSeconds(5))
-				 .flatMap(s -> contactoService.listUsuarios())
-			      .log("Generado nuevo valor");
-	}
-	
-
-	@GetMapping(value="/contactoses", produces=MediaType.TEXT_EVENT_STREAM_VALUE)
-	public Flux<String> listContactosev(){
-		Random r = new Random();
-		int low = 0;
-		int high = 50;
-		return Flux.fromStream(
-				Stream.generate(() -> r.nextInt(high - low) + low)
-				.map(s -> String.valueOf(s))
-				.peek((msg) -> {
-					LOGGER.info(msg);
-				}))
-				.map(s -> s)
-				.delayElements(java.time.Duration.ofSeconds(1));
-	}
-
-	@GetMapping("/stream-sse")
-	public Flux<ServerSentEvent<String>> streamEvents() {
-	    return Flux.interval(Duration.ofSeconds(1))
-	      .map(sequence -> ServerSentEvent.<String> builder()
-	        .id(String.valueOf(sequence))
-	          .event("periodic-event")
-	          .data("SSE - " +  java.time.LocalDateTime.now() )
-	          .build())
-	      .log("Generado nuevo valor");
-	}
 
 	@GetMapping("/contactos/{id}")
 	public Mono<ResponseEntity<Contacto>> contacto(@PathVariable String id) {
 		return contactoService.contacto(id);
 
 	}
+	
 	
 	@GetMapping("/contactos/find")
 	public Flux<Contacto> contactoEmail(@RequestParam String email,@RequestParam String nombre) {
@@ -114,6 +59,7 @@ public class ContactoController {
 
 	@PostMapping("/contactos")
 	public Mono<ResponseEntity<Contacto>> contacto(@RequestBody Contacto contacto) {
+		LOGGER.info(String.format("Nuevo Contacto:[%s]", contacto));
 		return contactoService.contacto(contacto);
 
 	}
