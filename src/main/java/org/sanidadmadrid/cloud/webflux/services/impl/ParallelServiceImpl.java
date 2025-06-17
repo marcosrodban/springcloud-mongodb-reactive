@@ -19,13 +19,13 @@ public class ParallelServiceImpl {
 	
 	public void procesadoParalelo(){
 		long tiempoini = System.currentTimeMillis();
-		System.out.println("comenzamos con el proceso: " );
+		log.debug("comenzamos con el proceso: " );
 		List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
         List<CompletableFuture<Integer>> futures = numbers.stream()
                 .map( number -> CompletableFuture.supplyAsync(() -> compute(number)) )
                 .collect(Collectors.toList());
         // Combine all CompletableFuture objects into a single CompletableFuture
-        System.out.println("unimos todos los resultados....... " );
+        log.debug("unimos todos los resultados....... " );
         
         CompletableFuture<Void> allFutures = CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]));
         // Wait for all computations to complete
@@ -35,7 +35,7 @@ public class ParallelServiceImpl {
                 .map(CompletableFuture::join)
                 .reduce(0, Integer::sum);
         // Print the final result
-        System.out.println("Sum of numbers: " + sum+ " tiempo total:"+(System.currentTimeMillis() - tiempoini));
+        log.debug("Sum of numbers: " + sum+ " tiempo total:"+(System.currentTimeMillis() - tiempoini));
 	}
 	
 	public void comparableFuture() {
@@ -61,7 +61,7 @@ public class ParallelServiceImpl {
 		CompletableFuture<Void> combinedFuture 
 		  = CompletableFuture.allOf(future1, future2);
 
-		/*System.out.println("vamos a hacer el geet: " );
+		/*log.debug("vamos a hacer el geet: " );
 		long tiempoini = System.currentTimeMillis();
 		try {
 			combinedFuture.get();
@@ -73,7 +73,7 @@ public class ParallelServiceImpl {
 			e.printStackTrace();
 		}
 		
-		System.out.println("get hecho: " );
+		log.debug("get hecho: " );
 		
 		
 */
@@ -115,7 +115,7 @@ public class ParallelServiceImpl {
 			combined = Stream.of(future1.get(), future2.get())
 					.flatMap(List::stream)
 			        .collect(Collectors.toList());
-			System.out.println("combined: " +  combined);
+			log.debug("combined: " +  combined);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -153,7 +153,7 @@ public class ParallelServiceImpl {
     private static int compute(int number) {
         // Simulate some time-consuming computation
         try {
-        	System.out.println("comenzamos con el numero: " + number);
+        	log.debug("comenzamos con el numero: " + number);
             Thread.sleep(1000);
             
         } catch (InterruptedException e) {
@@ -161,7 +161,7 @@ public class ParallelServiceImpl {
         }
 
         // Return the result
-        System.out.println("terminamos con el numero: " + number+" ,resultado:"+number * number);
+        log.debug("terminamos con el numero: " + number+" ,resultado:"+number * number);
         return number * number;
     }
 

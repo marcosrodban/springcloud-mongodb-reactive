@@ -48,7 +48,7 @@ public class MongoConfiguration extends AbstractReactiveMongoConfiguration  {
     private MongoClientSettings createMongoClientSettings(MongoProperties mongoProperties){
 
         ConnectionString ConnectionString = new ConnectionString(mongoProperties.getUri());
-        System.out.println(String.format("uri:[%s], database:[%s]", mongoProperties.getUri(),mongoProperties.getDatabase()));
+        log.debug(String.format("uri:[%s], database:[%s]", mongoProperties.getUri(),mongoProperties.getDatabase()));
 
         MongoClientSettings mongoClientSettings = MongoClientSettings.builder()
                                    .readConcern(ReadConcern.DEFAULT)
